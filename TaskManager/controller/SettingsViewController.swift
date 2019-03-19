@@ -41,7 +41,7 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "notificationsCell", for: indexPath) as! NotificationsTableViewCell
-        
+        cell.selectionStyle = .none
         cell.labelTitle?.text = Constants.TurnONOFFNotifications.message
         
         return cell

@@ -63,6 +63,8 @@ class AddUpdateTaskViewController: UIViewController {
         buttonSaveUpdateAction.setTitle(buttonSaveUpdate, for: .normal)
         buttonSaveUpdateAction.addTarget(self, action: #selector(AddUpdateTaskViewController.saveTask), for: .touchUpInside)
         
+        buttonSaveUpdateAction.layer.cornerRadius = 7
+        
         dateTextfield.inputView = UIView()
         categoryNameTextField.inputView = UIView()
         
@@ -129,22 +131,28 @@ class AddUpdateTaskViewController: UIViewController {
     }
     
     @objc func saveTask() {
+        
         guard let taskName = nameTextField.text,
             let category = categoryNameTextField.text,
             let date = dateTextfield.text
         else { return }
         
-        if let categoryType = CategoryType(rawValue: category.lowercased()) {
-            if (selectedTask == nil) {
-                self.taskService?.addTask(title: taskName, completionDate: date, categoryColor: categoryType.categoryColor, finished: false, for: categoryType, completion: { (success, tasks) in
-                    if success {
-                        self.taskList = tasks
-                        self.performSegue(withIdentifier: "backToMain", sender: self)
-                    }
-                })
-            } else {
-                self.taskService?.updateTask(currentTask: selectedTask!, title: taskName, completionDate: date, categoryColor: categoryType.categoryColor, forCategory: category)
-                self.performSegue(withIdentifier: "backToMain", sender: self)
+        if taskName != "" && category != "" {
+            if let categoryType = CategoryType(rawValue: category.lowercased()) {
+                if (selectedTask == nil) {
+                    self.taskService?.addTask(title: taskName, completionDate: date, categoryColor: categoryType.categoryColor, finished: false, for: categoryType, completion: { (success, tasks) in
+                        if success {
+                            self.taskList = tasks
+                            self.performSegue(withIdentifier: "backToMain", sender: self)
+                        }
+                    })
+                } else {
+                    self.taskService?.updateTask(currentTask: selectedTask!, title: taskName, completionDate: date, categoryColor: categoryType.categoryColor, forCategory: category)
+                    self.performSegue(withIdentifier: "backToMain", sender: self)
+                }
+            }
+        } else {
+            showAlert(title: "", message: Constants.AlertsMessages.emptyField) {
             }
         }
     }
@@ -204,5 +212,18 @@ extension AddUpdateTaskViewController: UITextFieldDelegate, UIActionSheetDelegat
             //Present the controller
             self.present(actionSheet, animated: true, completion: nil)
         }
+    }
+}
+
+extension AddUpdateTaskViewController {
+    
+    func showAlert(title: String, message: String, callback: @escaping () -> ()) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: Constants.AlertsMessages.accept, style: .default, handler: {
+            alertAction in
+            callback()
+        }))
+        
+        self.present(alert, animated: true, completion: nil)
     }
 }

@@ -169,6 +169,7 @@ extension TasksViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "taskCell", for: indexPath) as! TaskTableViewCell
+        cell.selectionStyle = .none
         
         if indexPath.section == 0 {
             cell.textLabel?.text = taskList[indexPath.row].title

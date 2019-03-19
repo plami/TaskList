@@ -25,4 +25,11 @@ struct Constants {
     struct TurnONOFFNotifications {
         static let message = "TURN ON/OFF notifications"
     }
+    
+    struct AlertsMessages {
+        static let emptyField = "Please enter necessary fields!"
+        static let accept = "OK"
+        static let yes = "YES"
+        static let no = "NO"
+    }
 }
